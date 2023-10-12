@@ -3,13 +3,24 @@
 
 using namespace std;
 
-map<string, map<string, string> > dataAkun;
+// initialize map that associates string with a map of string
+map<string, map<string, string>> dataAkun;
 
-// Hash Function
+// hash function
 int hashFunction(string password)
 {
-  // Assignment: Make a good hash function here
-  return tolower(password[0]) - 97;
+  unsigned long hash = 5381; // initialize prime number
+
+  for (char c : password) // loop each character in password
+  {
+    hash = ((hash << 5) + hash) ^ static_cast<unsigned long>(c);
+    // hash << 5: shift binary bits of hash by 5 positions to the left
+    // + hash: result added to original hash value
+    // static_cast<unsigned long>(c): convert to ascii
+    // ^ = XOR
+  }
+
+  return hash;
 }
 
 void registerAkun()
@@ -28,16 +39,16 @@ void registerAkun()
   dataDetail["username"] = username;
   dataDetail["fullname"] = fullname;
 
-  // masukkan ke map
+  // insert to map
   dataAkun[hash_key] = dataDetail;
 }
 
 void loginAkun()
 {
   string username, password;
-  cout << "Masukkan Username: " << endl;
+  cout << "Insert Username: " << endl;
   cin >> username;
-  cout << "Masukkan Password: " << endl;
+  cout << "Insert Password: " << endl;
   cin >> password;
 
   string hash_key = to_string(hashFunction(password));
@@ -45,13 +56,17 @@ void loginAkun()
   cout << endl;
   if (dataAkun.find(hash_key) != dataAkun.end())
   {
-    cout << "Login berhasil!" << endl
+    cout << "Login succeeds!\n"
+         << endl
          << endl;
-    cout << "==== Account Details ====" << endl;
+    cout << "==== Account Details ====\n"
+         << endl;
     cout << "Username: " << dataAkun[hash_key]["username"] << endl;
-    cout << "Fullname: " << dataAkun[hash_key]["username"] << endl;
-  } else {
-    cout << "Login gagal!" << endl
+    cout << "Fullname: " << dataAkun[hash_key]["fullname"] << endl;
+  }
+  else
+  {
+    cout << "\nLogin failed!" << endl
          << endl;
   }
 }
@@ -80,7 +95,7 @@ void menu()
     cout << "3. Exit" << endl;
 
     cout << endl;
-    cout << "Pilih Menu: " << endl;
+    cout << "\nInsert number from menu: " << endl;
     cin >> input_user;
 
     if (input_user == 1)
