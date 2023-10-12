@@ -1,4 +1,5 @@
-// belom
+// Jacinta Syilloam
+// 5027221036
 
 #include <iostream>
 #include <string>
@@ -10,13 +11,30 @@ struct HashTable
     string username, password;
 } dataAccount[26];
 
+// custom basic hash function: combining ascii with xor
 int HashFunction(string password)
 {
-    return tolower(password[0]) - 97;
+    int hash = 0;
+
+    // iterate through each character in the password
+    for (char c : password)
+    {
+        // XOR the hash with the ASCII value of the character
+        // static_cast: casting operator in cpp
+        // static_cast<int>(c): convert character c to integer
+        hash ^= static_cast<int>(c);
+    }
+
+    // ensure the index is within the array size (26)
+    int index = hash % 26;
+
+    return index;
 }
 
-void printAll(){
-    for (int i; i < 26; i++) {
+void printAll()
+{
+    for (int i; i < 26; i++)
+    {
         cout << i << "\t||\t" << dataAccount[i].username << " - " << dataAccount[i].password << "\n";
     }
 }
@@ -27,10 +45,10 @@ void Menu()
 
     while (true)
     {
-        cout << "--- HOME PAGE  ---\n"
+        cout << "--- HOME PAGE ---\n"
              << "1. Register\n"
              << "2. Login\n"
-             << "3. Exit\n\n"
+             << "3. Exit and print accounts\n\n"
              << "Please input a number to proceed: ";
 
         cin >> userInput;
@@ -40,6 +58,7 @@ void Menu()
         {
             string username, password;
 
+            cout << "--- REGISTER ---\n";
             cout << "Insert username: ";
             cin >> username;
             cout << "Insert password: ";
@@ -47,18 +66,29 @@ void Menu()
 
             int index = HashFunction(password);
 
-            dataAccount[index].username = username;
-            dataAccount[index].password = password;
+            if (dataAccount[index].username.empty() && dataAccount[index].password.empty())
+            {
+                dataAccount[index].username = username;
+                dataAccount[index].password = password;
+            }
+            else
+            {
+                cout << "Account already exists!" << endl;
+            }
         }
         else if (userInput == 2)
         {
-            cout << "--- LOGIN ----";
-        } 
-        else if (userInput == 3){
+            cout << "--- LOGIN ----"
+                 << "\nUnder construction";
+        }
+        else if (userInput == 3)
+        {
             printAll();
 
-            break;
-        } else {
+            return Menu();
+        }
+        else
+        {
             cout << "Invalid input!\n\n";
             return Menu();
         }
@@ -68,5 +98,4 @@ void Menu()
 int main()
 {
     Menu();
-
 }
